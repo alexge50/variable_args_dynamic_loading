@@ -6,6 +6,7 @@
 #define VARIABLE_ARGS_DYNAMIC_LOADING_ARGUMENTS_H
 
 #include <vector>
+#include <functional>
 #include <variant>
 #include <unordered_map>
 
@@ -13,7 +14,7 @@ using Type = std::variant<int, float>;
 
 using Arguments = std::unordered_map<std::string, Type>;
 
-using Function = Type(*)(const Arguments&);
+using Function = std::function<Type(const Arguments&)>;
 
 struct FunctionInfo
 {
