@@ -54,6 +54,10 @@ EXPORT FunctionsInfo export_init()\
     module.register_functions();\
     return module.get();\
 }\
+extern "C" EXPORT void* entry_point()\
+{ \
+    return reinterpret_cast<void*>(export_init); \
+} \
 void Module::register_functions()
 
 
