@@ -37,7 +37,7 @@ public:
 
         info.push_back({name, std::move(argumentTypes), get_type_name<ReturnType>(), Function{[f, arg_names, arg_types](const Arguments& arguments){
             int i = -1;
-            return f((dummy<Args>, i++, (arg_types[i] == "int" ? std::get<int>(arguments.at(arg_names[i])) : std::get<float>(arguments.at(arg_names[i]))))...);
+            return f((i++, std::get<Args>(arguments.at(arg_names[i])))...);
         }}});
     }
 
