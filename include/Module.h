@@ -9,6 +9,7 @@
 #include <string>
 #include "Arguments.h"
 
+template <typename TypeRegister>
 class Module
 {
 public:
@@ -18,14 +19,14 @@ public:
 
         auto entry_point = reinterpret_cast<void*(*)()>(dlsym(m_dlLib, "entry_point"));
 
-        m_importedFunctions = reinterpret_cast<ExportedSymbols>(entry_point())();
+        m_importedFunctions = reinterpret_cast<ExportedSymbols<TypeRegister>>(entry_point())();
     }
 
-    const FunctionsInfo& getFunctionsInfo() const { return m_importedFunctions; };
+    const FunctionsInfo<TypeRegister>& getFunctionsInfo() const { return m_importedFunctions; };
 
 private:
     void* m_dlLib;
-    FunctionsInfo m_importedFunctions;
+    FunctionsInfo<TypeRegister> m_importedFunctions;
 };
 
 

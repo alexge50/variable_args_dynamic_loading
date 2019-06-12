@@ -5,8 +5,8 @@
 #ifndef VARIABLE_ARGS_DYNAMIC_LOADING_ARGUMENTS_H
 #define VARIABLE_ARGS_DYNAMIC_LOADING_ARGUMENTS_H
 
-#include <any>
 #include <vector>
+#include <variant>
 #include <typeinfo>
 #include <functional>
 
@@ -41,21 +41,35 @@ private:
 
 };
 
-using Type = std::any;
-using Arguments = std::vector<Type>;
-using Function = std::function<Type(const Arguments&)>;
+template<typename... Args>
+struct TypeRegister
+{
+    using Type = std::variant<Args...>;
+};
 
+template <typename TypeRegister>
+using Type = typename TypeRegister::Type;
+
+template <typename TypeRegister>
+using Arguments = std::vector<Type<TypeRegister>>;
+
+template <typename TypeRegister>
+using Function = std::function<Type<TypeRegister>(const Arguments<TypeRegister>&)>;
+
+template <typename TypeRegister>
 struct FunctionInfo
 {
     std::string name;
     std::vector<std::pair<std::string, TypeInfo>> argumentTypes;
     TypeInfo returnType;
-    Function function;
+    Function<TypeRegister> function;
 };
 
-using FunctionsInfo = std::vector<FunctionInfo>;
+template <typename TypeRegister>
+using FunctionsInfo = std::vector<FunctionInfo<TypeRegister>>;
 
-using ExportedSymbols = FunctionsInfo(*)();
+template <typename TypeRegister>
+using ExportedSymbols = FunctionsInfo<TypeRegister>(*)();
 
 #ifdef __WIN32
 #define EXPORT __declspec(dllexport)

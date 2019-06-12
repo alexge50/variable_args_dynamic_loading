@@ -4,6 +4,7 @@
 
 #include <Arguments.h>
 #include <SymbolGen.h>
+#include "TypeRegister.h"
 
 #include <iostream>
 
@@ -13,7 +14,9 @@ EXPORT int f(int lenny)
     return 1;
 }
 
-MODULE_EXPORT()
+MODULE_EXPORT(MyTypes,
 {
     def("f", f, {"lenny"});
-}
+})
+
+

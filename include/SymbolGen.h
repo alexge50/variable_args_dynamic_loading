@@ -15,6 +15,7 @@
 
 #include <iostream>
 
+template <typename TypeRegister>
 struct Module
 {
 public:
@@ -30,30 +31,32 @@ public:
         for(int i = 0; i < sizeof...(Args); i++)
             argumentTypes.push_back({arg_names[i], arg_types[i]});
 
-        info.push_back(FunctionInfo{name, std::move(argumentTypes), {typeid(ReturnType)}, Function{[f](const Arguments& arguments){
+        info.push_back({name, std::move(argumentTypes), {typeid(ReturnType)}, Function<TypeRegister>{[f](const Arguments<TypeRegister>& arguments){
             int i = 0;
-            return f((i++, std::any_cast<Args>(arguments[i]))...);
+            return f(std::get<Args>(arguments[i++])...);
         }}});
     }
 
     void register_functions();
 
 private:
-    FunctionsInfo info;
+    FunctionsInfo<TypeRegister> info;
 };
 
-#define MODULE_EXPORT() \
-EXPORT FunctionsInfo export_init()\
+#define MODULE_EXPORT(TypeRegister, FunctionRegistration) \
+template <>\
+void Module<TypeRegister>::register_functions()\
+FunctionRegistration \
+EXPORT FunctionsInfo<TypeRegister> export_init()\
 {\
-    Module module; \
+    Module<TypeRegister> module; \
     module.register_functions();\
     return module.get();\
 }\
 extern "C" EXPORT void* entry_point()\
 { \
     return reinterpret_cast<void*>(export_init); \
-} \
-void Module::register_functions()
+}
 
 
 #endif //VARIABLE_ARGS_DYNAMIC_LOADING_SYMBOLGEN_H

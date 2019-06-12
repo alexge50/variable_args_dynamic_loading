@@ -4,9 +4,11 @@
 #include "Arguments.h"
 #include "Module.h"
 
+#include "TypeRegister.h"
+
 int main()
 {
-    Module module("./libmodule.so");
+    Module<MyTypes> module("./libmodule.so");
 
     module.getFunctionsInfo()[0].function({
         1
