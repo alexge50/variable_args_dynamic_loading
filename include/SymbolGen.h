@@ -35,9 +35,9 @@ public:
         for(int i = 0; i < sizeof...(Args); i++)
             argumentTypes[arg_names[i]] = arg_types[i];
 
-        info.push_back({name, std::move(argumentTypes), get_type_name<ReturnType>(), Function{[f, arg_names, arg_types](const Arguments& arguments){
+        info.push_back({name, std::move(argumentTypes), get_type_name<ReturnType>(), Function{[f](const Arguments& arguments){
             int i = -1;
-            return f((i++, std::get<Args>(arguments.at(arg_names[i])))...);
+            return f((i++, std::get<Args>(arguments[i]))...);
         }}});
     }
 

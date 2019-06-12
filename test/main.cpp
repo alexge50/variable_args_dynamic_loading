@@ -9,7 +9,7 @@ int main()
     Module module("./libmodule.so");
 
     module.getFunctionsInfo()[0].function({
-       {"lenny", {1}}
+       1
     });
 
     return 0;

@@ -11,9 +11,7 @@
 #include <unordered_map>
 
 using Type = std::variant<int, float>;
-
-using Arguments = std::unordered_map<std::string, Type>;
-
+using Arguments = std::vector<Type>;
 using Function = std::function<Type(const Arguments&)>;
 
 struct FunctionInfo
